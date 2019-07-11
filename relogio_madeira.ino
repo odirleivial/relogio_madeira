@@ -27,12 +27,15 @@ pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
 
 void loop() {
 
-defNum (random(0,12), random(1,4));
+defNum (random(0,1), 1);
+defNum (random(0,9), 2);
+defNum (random(0,9), 3);
+defNum (random(0,9), 4);
 
-defNum (2, 1);
-defNum (3, 2);
-defNum (5, 3);
-defNum (8, 4);
+// defNum (0, 1);
+// defNum (3, 2);
+// defNum (2, 3);
+// defNum (5, 4);
 
 delay(DELAYVAL);
 /*
@@ -52,7 +55,7 @@ delay(DELAYVAL);
 
 void defNum (int valor, int posicao){
 
-  posicao = (posicao - 1 ) * 7;
+  posicao = ((posicao - 1 ) * 7) -1 ;
     
   pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
   pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
