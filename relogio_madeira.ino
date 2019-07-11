@@ -27,7 +27,13 @@ pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
 
 void loop() {
 
-defNum (random(0,12), 0);
+defNum (random(0,12), random(1,4));
+
+defNum (2, 1);
+defNum (3, 2);
+defNum (5, 3);
+defNum (8, 4);
+
 delay(DELAYVAL);
 /*
     for (int i=0; i<10; i++){
@@ -45,12 +51,20 @@ delay(DELAYVAL);
 
 
 void defNum (int valor, int posicao){
-  pixels.clear();
+
+  posicao = (posicao - 1 ) * 7;
+    
+  pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+  pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
+  pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 0));
+  pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 0));
+  pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 0));
+  pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 0));
+  pixels.setPixelColor(7 + posicao, pixels.Color(0, 0, 0));
   pixels.show();
-  posicao = posicao -1;
-  
+ 
   switch (valor) {
-    case 0:
+    case 0: //{1, 2, 3, 5, 6, 7},     // 0
           pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 155));
@@ -59,14 +73,13 @@ void defNum (int valor, int posicao){
           pixels.setPixelColor(7 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(8 + posicao, pixels.Color(0, 0, 155));
           pixels.show();
-    
-      break;
-    case 1:
+          break;
+    case 1: // {6, 7},                 // 1
           pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(7 + posicao, pixels.Color(0, 0, 155));
           pixels.show();
       break;
-    case 2:
+    case 2: // {2, 3, 4, 5, 6},        // 2
           pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 155));
@@ -74,7 +87,7 @@ void defNum (int valor, int posicao){
           pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 155));
           pixels.show();
         break;
-    case 3:
+    case 3: // {3, 4, 5, 6, 7},        // 3
           pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 155));
@@ -89,7 +102,7 @@ void defNum (int valor, int posicao){
           pixels.setPixelColor(7 + posicao, pixels.Color(0, 0, 155));
           pixels.show();
       break;
-    case 5:
+    case 5: //{1, 3, 4, 5, 7},        // 5
           pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 155));
           pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 155));
@@ -131,20 +144,20 @@ void defNum (int valor, int posicao){
       break;
 
     default:
-        for (int j=0;j<5;j++) {
-          pixels.setPixelColor(1 + posicao, pixels.Color(155, 0, 0));
-          pixels.setPixelColor(2 + posicao, pixels.Color(155, 0, 0));
-          pixels.setPixelColor(3 + posicao, pixels.Color(155, 0, 0));
-          pixels.setPixelColor(4 + posicao, pixels.Color(155, 0, 0));
-          pixels.setPixelColor(5 + posicao, pixels.Color(155, 0, 0));
-          pixels.setPixelColor(6 + posicao, pixels.Color(155, 0, 0));
-          pixels.setPixelColor(7 + posicao, pixels.Color(155, 0, 0));
-          pixels.show();
-          delay(250);
-          pixels.clear();
-          pixels.show();
-          delay(250);
-        }
+          for (int j=0;j<5;j++) {
+            pixels.setPixelColor(1 + posicao, pixels.Color(155, 0, 0));
+            pixels.setPixelColor(2 + posicao, pixels.Color(155, 0, 0));
+            pixels.setPixelColor(3 + posicao, pixels.Color(155, 0, 0));
+            pixels.setPixelColor(4 + posicao, pixels.Color(155, 0, 0));
+            pixels.setPixelColor(5 + posicao, pixels.Color(155, 0, 0));
+            pixels.setPixelColor(6 + posicao, pixels.Color(155, 0, 0));
+            pixels.setPixelColor(7 + posicao, pixels.Color(155, 0, 0));
+            pixels.show();
+            delay(250);
+            pixels.clear();
+            pixels.show();
+            delay(250);
+          }
       break;
   }
   
