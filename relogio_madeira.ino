@@ -182,7 +182,7 @@ void defNum (){
   };
 
   for (byte i = 0; i < 10; i++) {
-    Serial.println(ledNum[i]);
+     Serial.println(ledNum[i]);
   }
 }
 /*
