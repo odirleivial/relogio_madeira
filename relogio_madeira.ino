@@ -1,4 +1,3 @@
-
 //Controle Fita de Leds enderessáveis
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
@@ -264,7 +263,7 @@ String Mostrarelogio()
    strHora = "0" + String(horas);
   }else{
    strHora = horas;
-
+  }
   //adiciona zero a esquera
   String strMinuto = "";
   if(minutos < 10){
