@@ -14,7 +14,7 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 
 int vermelho = 255;
-int verde = 255;
+int verde = 100;
 int azul = 0;
 
 void setup() {

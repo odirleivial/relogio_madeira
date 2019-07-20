@@ -80,10 +80,8 @@ void loop() {
     }
     
     if (stBtCor == HIGH) {    
-      muda_cor();
       vermelho, verde, azul = muda_cor();
       exibeHora();
-      Serial.println("CORRRRRRRRRR : ");
     }
     
 }
@@ -91,34 +89,46 @@ void loop() {
 int muda_cor(){
   switch (vCor) {
     case 0:
-      vermelho = random(0,255);
-      verde = random(0,255);
-      azul = random(0,255);
+      vermelho = 0;
+      verde = 0;
+      azul = 255;
       vCor++;
+      Serial.println("Azul : ");
     break;
     case 1:
         vermelho = 255;
         verde = 0;
         azul = 0;
         vCor++;
+        Serial.println("VERMELHO : ");
     break; 
     case 2:
         vermelho = 0;
         verde = 255;
         azul = 0;
         vCor++;
+        Serial.println("VERDE : ");
     break; 
     case 3:
-        vermelho = 0;
-        verde = 0;
-        azul = 255;
+        vermelho = 14;
+        verde = 222;
+        azul = 217;
         vCor++;
-    break;       
+        Serial.println("CIANO : ");
+    break;   
+    case 4:
+        vermelho = 255;
+        verde = 100;
+        azul = 0;
+        vCor++;
+        Serial.println("LARANJA : ");
+    break;  
     default:
         vermelho = 255;
         verde = 255;
         azul = 255;
         vCor = 0;
+        Serial.println("BRANCO : ");
     break;  
     }
         
@@ -385,16 +395,16 @@ String Mostrarelogio()
 
   }
 
-  Serial.print("Hora : ");
-  Serial.print(horas);
-  Serial.print(":");
-  Serial.print(minutos);
-  Serial.print(":");
-  Serial.println(segundos);
+//  Serial.print("Hora : ");
+//  Serial.print(horas);
+//  Serial.print(":");
+//  Serial.print(minutos);
+//  Serial.print(":");
+//  Serial.println(segundos);
 
   //exibe hora no monitor serial
   horaAtual = strHora + strMinuto;
-  Serial.println(horaAtual);
+  //Serial.println(horaAtual);
 
   return horaAtual;
 }
