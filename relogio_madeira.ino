@@ -6,7 +6,7 @@
 
 #define PIN        9 // Porta
 #define NUMPIXELS 31 // Número de leds
-#define DELAYVAL 400// Time (in milliseconds) to pause between pixels
+#define DELAYVAL 250// Time (in milliseconds) to pause between pixels
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 //Controle Fita de Leds enderessáveis
@@ -58,9 +58,7 @@ void loop() {
     horaAterior = horaAtual;
   }
   
-  
   delay(DELAYVAL);
-  
   Mostrarelogio();
   
   int stBtHora = digitalRead(BT_HORA);
@@ -76,6 +74,9 @@ void loop() {
     if (stBtMin == HIGH) {    
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
+          if (minuto >= 59){
+            minuto = -1;
+          }
           ajusteHora(hora, minuto + 1 );
     }
     
@@ -118,10 +119,17 @@ int muda_cor(){
     break;   
     case 4:
         vermelho = 255;
-        verde = 100;
+        verde = 0;
+        azul = 255;
+        vCor++;
+        Serial.println("ROSA : ");
+    break;  
+    case 5:
+        vermelho = 255;
+        verde = 230;
         azul = 0;
         vCor++;
-        Serial.println("LARANJA : ");
+        Serial.println("AMARELO : ");
     break;  
     default:
         vermelho = 255;

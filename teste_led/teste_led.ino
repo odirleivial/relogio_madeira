@@ -7,15 +7,15 @@
 
 #define PIN        9 // Porta
 #define NUMPIXELS 31 // Número de leds
-#define DELAYVAL 1000// Time (in milliseconds) to pause between pixels
+#define DELAYVAL 2000// Time (in milliseconds) to pause between pixels
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 //Controle Fita de Leds enderessáveis
 
 
-int vermelho = 255;
-int verde = 100;
-int azul = 0;
+int vermelho = 49;
+int verde = 206;
+int azul = 190;
 
 void setup() {
   //Controle Fita de Leds enderessáveis  
@@ -31,9 +31,9 @@ void loop() {
 
 // error();
 int numero = 8;
-  defNum (numero, 1);
-  defNum (numero, 2);
-  defNum (numero, 3);
+  defNum (random(0,9), 1);
+  defNum (random(0,9), 2);
+  defNum (random(0,9), 3);
   defNum (numero, 4);
 
 delay(DELAYVAL);
