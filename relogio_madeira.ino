@@ -17,14 +17,14 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 byte zero = 0x00; 
 //Definições Relógio 
 
+// Definição das portas dos botões de ajuste de hora e cor
 #define BT_HORA 5
 #define BT_MINUTO 6
 #define BT_COR 7
 
 String horaAterior = "";
 
-
-
+// definições das variáveis para ajuste de cor
 int vermelho = 255;
 int verde = 0;
 int azul = 0;
@@ -41,17 +41,16 @@ void setup() {
   Serial.begin(9600);
   Wire.begin();
 
+  // Definição dos botões de ajuste de hora e cor
   pinMode(BT_HORA, INPUT);
   pinMode(BT_MINUTO, INPUT);
   pinMode(BT_COR, INPUT);
-  
-  //A linha abaixo pode ser retirada apos setar a data e hora
-   ///SelecionaDataeHora(); 
   
 }
 
 void loop() {
   
+  // Verifica se houve alteração na hora e manda exibir o novo valor
   String horaAtual = Mostrarelogio();
   if (horaAterior != horaAtual){
     exibeHora();
@@ -59,19 +58,19 @@ void loop() {
   }
   
   delay(DELAYVAL);
-  Mostrarelogio();
-  
+   
+  // Inicio - Leitura dos botões de ajuste de hora e cor
   int stBtHora = digitalRead(BT_HORA);
   int stBtMin = digitalRead(BT_MINUTO);
   int stBtCor = digitalRead(BT_COR);
   
-    if (stBtHora == HIGH) {    
+    if (stBtHora == HIGH) {    //Ajusta a hora
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
           ajusteHora(hora + 1, minuto );
     }
     
-    if (stBtMin == HIGH) {    
+    if (stBtMin == HIGH) {    //Ajusta o minuto
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
           if (minuto >= 59){
@@ -80,14 +79,16 @@ void loop() {
           ajusteHora(hora, minuto + 1 );
     }
     
-    if (stBtCor == HIGH) {    
+    if (stBtCor == HIGH) {   //Ajusta a Cor
       vermelho, verde, azul = muda_cor();
       exibeHora();
     }
-    
+   // Fim - Leitura dos botões de ajuste de hora e cor   
 }
 
-int muda_cor(){
+int muda_cor(){ //Função para ajuste de cor
+  // Essa função ler o valor da variável vCor para definir os valores das variáveis de cor, 
+  // a cada leitura a variável vCor é incrementada para que na proxima chamada uma nova cor seja selecionada
   switch (vCor) {
     case 0:
       vermelho = 0;
@@ -143,19 +144,20 @@ int muda_cor(){
     return vermelho, verde, azul;
 }
 
-void exibeHora(){
+void exibeHora(){ //Função para exibir a hora no display de led
   
   String horaAtual = Mostrarelogio();
       
-    defNum (horaAtual.substring(0, 1).toInt(), 1, vermelho, verde, azul);
-    defNum (horaAtual.substring(1, 2).toInt(), 2, vermelho, verde, azul);
-    defNum (horaAtual.substring(2, 3).toInt(), 3, vermelho, verde, azul);
-    defNum (horaAtual.substring(3, 4).toInt(), 4, vermelho, verde, azul);
+  defNum (horaAtual.substring(0, 1).toInt(), 1, vermelho, verde, azul);
+  defNum (horaAtual.substring(1, 2).toInt(), 2, vermelho, verde, azul);
+  defNum (horaAtual.substring(2, 3).toInt(), 3, vermelho, verde, azul);
+  defNum (horaAtual.substring(3, 4).toInt(), 4, vermelho, verde, azul);
 
-    
 }
 
-void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
+void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){ 
+// Função para excrever os números de 0 a 9 no display
+// recebe o valor a ser impresso, a posição no display e as três variáveis de vCor
     
     posicao = ((posicao - 1 ) * 7);
       
@@ -250,7 +252,14 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.show();
         break;
       default:
-              error ();
+            pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 0));
+            pixels.show();
         break;
     }
       pixels.setPixelColor(28, pixels.Color(cVermelho, cVerde, cAzul));
@@ -258,77 +267,6 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
       pixels.show();
 }
 
-void error (){
-   
-    for (int j=0;j<3;j++) {
-        
-        int posicao = 0;
-        pixels.setPixelColor(0 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(1 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(2 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(3 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(4 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(5 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(6 + posicao, pixels.Color(250, 0, 0));
-        
-        posicao = 7;
-        pixels.setPixelColor(0 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(1 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(2 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(3 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(4 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(5 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(6 + posicao, pixels.Color(250, 0, 0));
-    
-        posicao = 14;
-        pixels.setPixelColor(0 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(1 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(2 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(3 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(4 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(5 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(6 + posicao, pixels.Color(250, 0, 0));
-    
-        posicao = 21;
-        pixels.setPixelColor(0 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(1 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(2 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(3 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(4 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(5 + posicao, pixels.Color(250, 0, 0));
-        pixels.setPixelColor(6 + posicao, pixels.Color(250, 0, 0));
-        pixels.show();
-        delay(250);
-        pixels.clear();
-        pixels.show();
-        delay(250);
-    }
-}
-
-void SelecionaDataeHora()   //Seta a data e a hora do DS1307
-{
-  byte segundos = 10; //Valores de 0 a 59
-  byte minutos = 18; //Valores de 0 a 59
-  byte horas = 14; //Valores de 0 a 23
-  byte diadasemana = 0; //Valores de 0 a 6 - 0=Domingo, 1 = Segunda, etc.
-  byte diadomes = 15; //Valores de 1 a 31
-  byte mes = 7; //Valores de 1 a 12
-  byte ano = 19; //Valores de 0 a 99
-  Wire.beginTransmission(DS1307_ADDRESS);
-  Wire.write(zero); //Stop no CI para que o mesmo possa receber os dados
-
-  //As linhas abaixo escrevem no CI os valores de 
-  //data e hora que foram colocados nas variaveis acima
-  Wire.write(ConverteParaBCD(segundos));
-  Wire.write(ConverteParaBCD(minutos));
-  Wire.write(ConverteParaBCD(horas));
-  Wire.write(ConverteParaBCD(diadasemana));
-  Wire.write(ConverteParaBCD(diadomes));
-  Wire.write(ConverteParaBCD(mes));
-  Wire.write(ConverteParaBCD(ano));
-  Wire.write(zero); //Start no CI
-  Wire.endTransmission(); 
-}
 
 void ajusteHora(byte horas, byte minutos)   //Seta a data e a hora do DS1307
 {
@@ -402,17 +340,5 @@ String Mostrarelogio()
    strSegundos = segundos;
 
   }
-
-//  Serial.print("Hora : ");
-//  Serial.print(horas);
-//  Serial.print(":");
-//  Serial.print(minutos);
-//  Serial.print(":");
-//  Serial.println(segundos);
-
-  //exibe hora no monitor serial
-  horaAtual = strHora + strMinuto;
-  //Serial.println(horaAtual);
-
   return horaAtual;
 }
