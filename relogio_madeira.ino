@@ -49,27 +49,25 @@ void setup() {
 }
 
 void loop() {
-  
+
   // Verifica se houve alteração na hora e manda exibir o novo valor
   String horaAtual = Mostrarelogio();
   if (horaAterior != horaAtual){
     exibeHora();
     horaAterior = horaAtual;
   }
-  
-  delay(DELAYVAL);
-   
+
   // Inicio - Leitura dos botões de ajuste de hora e cor
   int stBtHora = digitalRead(BT_HORA);
   int stBtMin = digitalRead(BT_MINUTO);
   int stBtCor = digitalRead(BT_COR);
-  
+
     if (stBtHora == HIGH) {    //Ajusta a hora
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
           ajusteHora(hora + 1, minuto );
     }
-    
+
     if (stBtMin == HIGH) {    //Ajusta o minuto
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
@@ -78,12 +76,14 @@ void loop() {
           }
           ajusteHora(hora, minuto + 1 );
     }
-    
+
     if (stBtCor == HIGH) {   //Ajusta a Cor
       vermelho, verde, azul = muda_cor();
       exibeHora();
     }
    // Fim - Leitura dos botões de ajuste de hora e cor   
+
+   delay(DELAYVAL);
 }
 
 int muda_cor(){ //Função para ajuste de cor
@@ -95,59 +95,59 @@ int muda_cor(){ //Função para ajuste de cor
       verde = 0;
       azul = 255;
       vCor++;
-      Serial.println("Azul : ");
+      Serial.println("Azul");
     break;
     case 1:
         vermelho = 255;
         verde = 0;
         azul = 0;
         vCor++;
-        Serial.println("VERMELHO : ");
+        Serial.println("VERMELHO");
     break; 
     case 2:
         vermelho = 0;
         verde = 255;
         azul = 0;
         vCor++;
-        Serial.println("VERDE : ");
+        Serial.println("VERDE");
     break; 
     case 3:
         vermelho = 14;
         verde = 222;
         azul = 217;
         vCor++;
-        Serial.println("CIANO : ");
+        Serial.println("CIANO");
     break;   
     case 4:
         vermelho = 255;
         verde = 0;
         azul = 255;
         vCor++;
-        Serial.println("ROSA : ");
+        Serial.println("ROSA");
     break;  
     case 5:
         vermelho = 255;
         verde = 230;
         azul = 0;
         vCor++;
-        Serial.println("AMARELO : ");
+        Serial.println("AMARELO");
     break;  
     default:
         vermelho = 255;
         verde = 255;
         azul = 255;
         vCor = 0;
-        Serial.println("BRANCO : ");
+        Serial.println("BRANCO");
     break;  
     }
-        
+
     return vermelho, verde, azul;
 }
 
 void exibeHora(){ //Função para exibir a hora no display de led
-  
+
   String horaAtual = Mostrarelogio();
-      
+
   defNum (horaAtual.substring(0, 1).toInt(), 1, vermelho, verde, azul);
   defNum (horaAtual.substring(1, 2).toInt(), 2, vermelho, verde, azul);
   defNum (horaAtual.substring(2, 3).toInt(), 3, vermelho, verde, azul);
@@ -158,9 +158,10 @@ void exibeHora(){ //Função para exibir a hora no display de led
 void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){ 
 // Função para excrever os números de 0 a 9 no display
 // recebe o valor a ser impresso, a posição no display e as três variáveis de vCor
-    
+
     posicao = ((posicao - 1 ) * 7);
-      
+
+    // apaga os leds
     pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
     pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
     pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
@@ -169,10 +170,10 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
     pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 0));
     pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 0));
     pixels.show();
-   
+
     switch (valor) {
       case 0: //{0, 1, 2, 3, 5, 6},     // 0
-      
+
             pixels.setPixelColor(0 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(1 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(2 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
@@ -267,7 +268,6 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
       pixels.show();
 }
 
-
 void ajusteHora(byte horas, byte minutos)   //Seta a data e a hora do DS1307
 {
   byte segundos = 0; //Valores de 0 a 59
@@ -301,7 +301,7 @@ byte ConverteparaDecimal(byte val)  { //Converte de BCD para decimal
   return ( (val/16*10) + (val%16) );
 }
 
-String Mostrarelogio()
+String Mostrarelogio() //Função para retornar a hora no formato HH12MI
 {
   String horaAtual = "";
   Wire.beginTransmission(DS1307_ADDRESS);
@@ -338,7 +338,7 @@ String Mostrarelogio()
    strSegundos = "0" + String(segundos);
   }else{
    strSegundos = segundos;
-
   }
+
   return horaAtual;
 }
