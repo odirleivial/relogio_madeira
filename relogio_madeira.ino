@@ -4,7 +4,7 @@
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
 
-#define PIN        9 // Porta
+#define PIN        3 // Porta
 #define NUMPIXELS 31 // Número de leds
 #define DELAYVAL 250// Time (in milliseconds) to pause between pixels
 
@@ -18,9 +18,9 @@ byte zero = 0x00;
 //Definições Relógio 
 
 // Definição das portas dos botões de ajuste de hora e cor
-#define BT_HORA 5
-#define BT_MINUTO 6
-#define BT_COR 7
+#define BT_HORA A1
+#define BT_MINUTO A0
+#define BT_COR A2
 
 String horaAterior = "";
 
@@ -45,6 +45,8 @@ void setup() {
   pinMode(BT_HORA, INPUT);
   pinMode(BT_MINUTO, INPUT);
   pinMode(BT_COR, INPUT);
+
+  ajusteHora(18,10);
   
 }
 
@@ -66,6 +68,9 @@ void loop() {
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
           ajusteHora(hora + 1, minuto );
+
+                  Serial.println("HORA");
+
     }
 
     if (stBtMin == HIGH) {    //Ajusta o minuto
@@ -75,6 +80,8 @@ void loop() {
             minuto = -1;
           }
           ajusteHora(hora, minuto + 1 );
+                  Serial.println("MINUTO");
+
     }
 
     if (stBtCor == HIGH) {   //Ajusta a Cor
@@ -339,6 +346,10 @@ String Mostrarelogio() //Função para retornar a hora no formato HH12MI
   }else{
    strSegundos = segundos;
   }
+  
+  horaAtual = strHora + strMinuto;
 
+        Serial.print("horaAtual: ");
+        Serial.println(horaAtual);
   return horaAtual;
 }
