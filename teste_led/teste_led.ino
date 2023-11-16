@@ -5,7 +5,7 @@
 #endif
 
 
-#define PIN        9 // Porta
+#define PIN        6 // Porta
 #define NUMPIXELS 31 // Número de leds
 #define DELAYVAL 2000// Time (in milliseconds) to pause between pixels
 
@@ -14,8 +14,9 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 
 int vermelho = 49;
-int verde = 206;
+int   = 206;
 int azul = 190;
+int vCor = 0;
 
 void setup() {
   //Controle Fita de Leds enderessáveis  
@@ -25,16 +26,23 @@ void setup() {
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
   //Controle Fita de Leds enderessáveis
 
+  Serial.begin(9600);
+  Serial.println("TESTE Fita LED Enderessável");
+
 }
 
 void loop() {
 
 // error();
-int numero = 8;
-  defNum (random(0,9), 1);
-  defNum (random(0,9), 2);
-  defNum (random(0,9), 3);
+  int numero = random(0,10);
+  // int numero = 8;
+  defNum (numero, 1);
+  defNum (numero, 2);
+  defNum (numero, 3);
   defNum (numero, 4);
+
+  vCor = random(0,7);
+  muda_cor();
 
 delay(DELAYVAL);
 
@@ -141,6 +149,60 @@ void defNum (int valor, int posicao){
     pixels.setPixelColor(28, pixels.Color(vermelho, verde, azul));
     pixels.setPixelColor(29, pixels.Color(vermelho, verde, azul));
     pixels.show();
+}
+
+int muda_cor(){ //Função para ajuste de cor
+  // Essa função ler o valor da variável vCor para definir os valores das variáveis de cor, 
+  // a cada leitura a variável vCor é incrementada para que na proxima chamada uma nova cor seja selecionada
+
+  switch (vCor) {
+    case 0:
+      vermelho = 0;
+      verde = 0;
+      azul = 255;
+      Serial.println("Azul");
+    break;
+    case 1:
+        vermelho = 255;
+        verde = 0;
+        azul = 0;
+        Serial.println("VERMELHO");
+    break; 
+    case 2:
+        vermelho = 0;
+        verde = 255;
+        azul = 0;
+        Serial.println("VERDE");
+    break; 
+    case 3:
+        vermelho = 14;
+        verde = 222;
+        azul = 217;
+        Serial.println("CIANO");
+    break;   
+    case 4:
+        vermelho = 255;
+        verde = 0;
+        azul = 255;
+        Serial.println("ROSA");
+    break;  
+    case 5:
+        vermelho = 255;
+        verde = 230;
+        azul = 0;
+        Serial.println("AMARELO");
+    break; 
+    default:
+        vermelho = 255;
+        verde = 255;
+        azul = 255;
+        Serial.println("BRANCO");
+        vCor = 0;
+    break;  
+    }
+    vCor++;
+
+    return vermelho, verde, azul;
 }
 
 
