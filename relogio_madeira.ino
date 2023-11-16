@@ -55,7 +55,14 @@ void loop() {
   // Verifica se houve alteração na hora e manda exibir o novo valor
   String horaAtual = Mostrarelogio();
   if (horaAterior != horaAtual){
-    exibeHora();
+      
+      //Verifica se está no modo de cor randomica
+      if (vCor == 7){
+        exibeHoraCor();}
+      else {
+        exibeHora();
+      }
+
     horaAterior = horaAtual;
   }
 
@@ -64,29 +71,46 @@ void loop() {
   int stBtMin = digitalRead(BT_MINUTO);
   int stBtCor = digitalRead(BT_COR);
 
-    if (stBtHora == HIGH) {    //Ajusta a hora
+    if (stBtHora == HIGH && stBtMin == LOW) {    //Ajusta a hora
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
           ajusteHora(hora + 1, minuto );
 
-                  Serial.println("HORA");
+          Serial.println("HORA");
 
     }
 
-    if (stBtMin == HIGH) {    //Ajusta o minuto
+    if (stBtMin == HIGH && stBtHora == LOW) {    //Ajusta o minuto
           int hora = horaAtual.substring(0, 2).toInt();
           int minuto = horaAtual.substring(2, 4).toInt();
           if (minuto >= 59){
             minuto = -1;
           }
           ajusteHora(hora, minuto + 1 );
-                  Serial.println("MINUTO");
+          Serial.println("MINUTO");
+
+    }
+
+        if (stBtMin == HIGH && stBtHora == HIGH) {    //Entra em modo manutenção
+
+          defNum (8, 1, vermelho, verde, azul);
+          defNum (8, 2, vermelho, verde, azul);
+          defNum (8, 3, vermelho, verde, azul);
+          defNum (8, 4, vermelho, verde, azul);
+
+          Serial.println("Modo Manutenção");
 
     }
 
     if (stBtCor == HIGH) {   //Ajusta a Cor
       vermelho, verde, azul = muda_cor();
-      exibeHora();
+
+      if (vCor == 7){
+        exibeHoraCor();}
+      else {
+        exibeHora();
+      }
+
     }
    // Fim - Leitura dos botões de ajuste de hora e cor   
 
@@ -96,55 +120,58 @@ void loop() {
 int muda_cor(){ //Função para ajuste de cor
   // Essa função ler o valor da variável vCor para definir os valores das variáveis de cor, 
   // a cada leitura a variável vCor é incrementada para que na proxima chamada uma nova cor seja selecionada
+  
+  vCor++;
+
   switch (vCor) {
     case 0:
       vermelho = 0;
       verde = 0;
       azul = 255;
-      vCor++;
       Serial.println("Azul");
     break;
     case 1:
         vermelho = 255;
         verde = 0;
         azul = 0;
-        vCor++;
         Serial.println("VERMELHO");
     break; 
     case 2:
         vermelho = 0;
         verde = 255;
         azul = 0;
-        vCor++;
         Serial.println("VERDE");
     break; 
     case 3:
         vermelho = 14;
         verde = 222;
         azul = 217;
-        vCor++;
         Serial.println("CIANO");
     break;   
     case 4:
         vermelho = 255;
         verde = 0;
         azul = 255;
-        vCor++;
         Serial.println("ROSA");
     break;  
     case 5:
         vermelho = 255;
         verde = 230;
         azul = 0;
-        vCor++;
         Serial.println("AMARELO");
-    break;  
-    default:
+    break; 
+    case 6:
         vermelho = 255;
         verde = 255;
         azul = 255;
-        vCor = 0;
         Serial.println("BRANCO");
+    break;  
+      case 7:
+          exibeHoraCor();
+          Serial.println("Arco-iro");
+    break;    
+    default:
+        vCor = 0;
     break;  
     }
 
@@ -162,22 +189,42 @@ void exibeHora(){ //Função para exibir a hora no display de led
 
 }
 
+void exibeHoraCor(){ //Função para exibir a hora no display de led com cores randomicas em cada caractere
+
+  String horaAtual = Mostrarelogio();
+ 
+  vCor = random(0, 7);
+  muda_cor();
+  defNum (horaAtual.substring(0, 1).toInt(), 1, vermelho, verde, azul);
+   
+  vCor = random(0, 7);
+  muda_cor();
+  defNum (horaAtual.substring(1, 2).toInt(), 2, vermelho, verde, azul);
+  
+  vCor = random(0, 7);
+  muda_cor();
+  defNum (horaAtual.substring(2, 3).toInt(), 3, vermelho, verde, azul);
+  
+  vCor = random(0, 7);
+  muda_cor();
+  defNum (horaAtual.substring(3, 4).toInt(), 4, vermelho, verde, azul);
+
+  //Pontos
+  vCor = random(0, 7);
+  muda_cor();
+  pixels.setPixelColor(28, pixels.Color(vermelho, verde, azul));
+  pixels.setPixelColor(29, pixels.Color(vermelho, verde, azul));
+  
+  vCor = 7;
+
+}
+
 void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){ 
 // Função para excrever os números de 0 a 9 no display
 // recebe o valor a ser impresso, a posição no display e as três variáveis de vCor
 
     posicao = ((posicao - 1 ) * 7);
-
-    // apaga os leds
-    pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
-    pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
-    pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
-    pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 0));
-    pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 0));
-    pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 0));
-    pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 0));
-    pixels.show();
-
+    
     switch (valor) {
       case 0: //{0, 1, 2, 3, 5, 6},     // 0
 
@@ -187,11 +234,23 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(3 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+            
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
             break;
       case 1: // {6, 3},                 // 1
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(3 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
         break;
       case 2: // {1, 2, 4, 5, 6},        // 2
@@ -200,6 +259,12 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(4 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(3 + posicao, pixels.Color(0, 0, 0));
+
+
             pixels.show();
           break;
       case 3: // {2, 3, 4, 5, 6},        // 3
@@ -208,6 +273,12 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(4 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+
+
             pixels.show();
         break;
       case 4: //{0, 3, 4, 6},           // 4
@@ -215,6 +286,12 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(3 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(4 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(5 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
         break;
       case 5: //{0, 2, 3, 4, 5},        // 5
@@ -223,6 +300,11 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(3 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(4 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
         break;
       case 6: //{0, 1, 2, 4, 5},        // 6
@@ -232,12 +314,23 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(3 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(4 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(6 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
         break;
       case 7: //{3, 6, 5},              // 7
             pixels.setPixelColor(3 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(0 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(2 + posicao, pixels.Color(0, 0, 0));
+            pixels.setPixelColor(4 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
         break;
       case 8: //{0, 1, 2, 3, 4, 5, 6},  // 8
@@ -257,6 +350,10 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
             pixels.setPixelColor(4 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(5 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
             pixels.setPixelColor(6 + posicao, pixels.Color(cVermelho, cVerde, cAzul));
+
+            // apaga os leds não utilizado no número
+            pixels.setPixelColor(1 + posicao, pixels.Color(0, 0, 0));
+
             pixels.show();
         break;
       default:
@@ -271,7 +368,7 @@ void defNum (int valor, int posicao, int cVermelho, int cVerde, int cAzul){
         break;
     }
       pixels.setPixelColor(28, pixels.Color(cVermelho, cVerde, cAzul));
-      pixels.setPixelColor(29, pixels.Color(vermelho, verde, azul));
+      pixels.setPixelColor(29, pixels.Color(cVermelho, cVerde, cAzul));
       pixels.show();
 }
 
