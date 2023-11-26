@@ -4,9 +4,9 @@
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
 
-#define PIN        3 // Porta
-#define NUMPIXELS 31 // Número de leds
-#define DELAYVAL 250// Time (in milliseconds) to pause between pixels
+#define PIN        3  // Novo: 6 - antigo: 3
+#define NUMPIXELS 31  // Número de leds
+#define DELAYVAL 250  // Time (in milliseconds) to pause between pixels
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 //Controle Fita de Leds enderessáveis
@@ -18,9 +18,9 @@ byte zero = 0x00;
 //Definições Relógio 
 
 // Definição das portas dos botões de ajuste de hora e cor
-#define BT_HORA A1
-#define BT_MINUTO A0
-#define BT_COR A2
+#define BT_HORA A1    // Novo: 2 - antigo: A1
+#define BT_MINUTO A0  // Novo: 3 - antigo: A0
+#define BT_COR A2     // Novo: 4 - antigo: A2
 
 String horaAterior = "";
 
@@ -46,7 +46,7 @@ void setup() {
   pinMode(BT_MINUTO, INPUT);
   pinMode(BT_COR, INPUT);
 
-  ajusteHora(18,10);
+  //ajusteHora(18,10);
   
 }
 
@@ -214,7 +214,8 @@ void exibeHoraCor(){ //Função para exibir a hora no display de led com cores r
   muda_cor();
   pixels.setPixelColor(28, pixels.Color(vermelho, verde, azul));
   pixels.setPixelColor(29, pixels.Color(vermelho, verde, azul));
-  
+  pixels.show();
+
   vCor = 7;
 
 }
@@ -419,6 +420,10 @@ String Mostrarelogio() //Função para retornar a hora no formato HH12MI
   //ajusta a hora para forto até 12hs
   if(horas > 12){
     horas = horas - 12;
+  } 
+ 
+  if(horas == 0){
+    horas = 12;
   } 
 
   //adiciona zero a esquera
